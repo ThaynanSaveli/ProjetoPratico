@@ -22,12 +22,52 @@
             <div class="row">
                 <div class="col-md-4 mb-4">
                     <h5>Adicionar Campo de Texto</h5><hr class="mt-1">
-                    <b-button type="button" variant="info" size="sm"><i class="fas fa-plus"></i> Adicionar Campo de Texto</b-button>
+                    <b-form-group class="col-12" label="Texto da Label:" label-for="str_texto_label">
+                        <b-form-input id="str_texto_label" name="str_texto_label" required></b-form-input>
+                    </b-form-group>
+                    <b-form-group class="col-12" label="Texto do Placeholder:" label-for="str_texto_placeholder">
+                        <b-form-input id="str_texto_placeholder" name="str_texto_placeholder" required></b-form-input>
+                    </b-form-group>
+                    <b-form-group class="col-12" label="Nome do Campo:" label-for="str_nome_campo">
+                        <b-form-input id="str_nome_campo" name="str_nome_campo" required></b-form-input>
+                    </b-form-group>
+                    <b-form-group class="col-12" label="ID do Campo:" label-for="str_id_campo">
+                        <b-form-input id="str_id_campo" name="str_id_campo" required></b-form-input>
+                    </b-form-group>
+                    <div class="text-center">
+                        <b-button type="button" @click="addInput" variant="info" size="sm"><i class="fas fa-plus"></i> Adicionar Campo de Texto</b-button>
+                    </div>
                 </div>
                 
                 <div class="col-md-4 mb-4">
                     <h5>Adicionar Botão</h5><hr class="mt-1">
-                    <b-button type="button" variant="info" size="sm"><i class="fas fa-plus"></i> Adicionar Botão</b-button>
+                    <div class="row">
+                        <b-form-group class="col-12" label="Texto do Botão:" label-for="str_texto_botao">
+                            <b-form-input id="str_texto_botao" name="str_texto_botao" required></b-form-input>
+                        </b-form-group>
+                        <b-form-group class="col-md-6" label="Cor do Botão:" label-for="str_cor_botao">
+                            <b-form-input type="color" id="str_cor_botao" name="str_cor_botao" required></b-form-input>
+                        </b-form-group>
+                        <b-form-group class="col-md-6" label="Cor do Texto Botão:" label-for="str_cor_texto_botao">
+                            <b-form-input type="color" id="str_cor_texto_botao" name="str_cor_texto_botao" required></b-form-input>
+                        </b-form-group>
+                        <b-form-group class="col-12" label="Nome do Botão:" label-for="str_nome_botao">
+                            <b-form-input id="str_nome_botao" name="str_nome_botao" required></b-form-input>
+                        </b-form-group>
+                        <b-form-group class="col-12" label="ID do Botão:" label-for="str_id_botao">
+                            <b-form-input id="str_id_botao" name="str_id_botao" required></b-form-input>
+                        </b-form-group>
+                        <b-form-group label="Tipo do Botão">
+                            <b-form-radio name="some-radios" v-model="exibirLink" value="submit">Botão para Exibir os Dados do Formulário</b-form-radio>
+                            <b-form-radio name="some-radios" v-model="exibirLink" value="link">Botão de Link Externo</b-form-radio>
+                        </b-form-group>
+                        <b-form-group v-show="exibirLink === 'link'" class="col-12" label="Link do Botão:" label-for="str_link_botao">
+                            <b-form-input id="str_link_botao" name="str_link_botao" required></b-form-input>
+                        </b-form-group>
+                        <div class="col-12 text-center">
+                            <b-button type="button" @click="addButton" variant="info" size="sm"><i class="fas fa-plus"></i> Adicionar Botão</b-button>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="col-md-4 mb-4">
@@ -35,42 +75,29 @@
                     <b-button type="button" variant="info" size="sm"><i class="fas fa-plus"></i> Adicionar Imagem</b-button>
                 </div>
 
-                <div>
+                <div class="col-12 mt-4">
                     <h5>Formulário Gerado</h5><hr class="mt-1">
-                    <b-form @submit="onSubmit" @reset="onReset" v-if="show">
+                    <b-form id="form_gerado" @submit="onSubmit" @reset="onReset">
                         <div class="row">
-                            <b-form-group class="col-md-6 col-lg-4" id="input-group-1" label="Email address:" label-for="input-1" description="We'll never share your email with anyone else.">
-                                <b-form-input id="input-1" v-model="form.email" type="email" required placeholder="Enter email"></b-form-input>
-                            </b-form-group>
-                        
-                            <b-form-group class="col-md-6 col-lg-4" id="input-group-2" label="Your Name:" label-for="input-2">
-                                <b-form-input
-                                id="input-2"
-                                v-model="form.name"
-                                required
-                                placeholder="Enter name"
-                                ></b-form-input>
-                            </b-form-group>
-                        
-                            <b-form-group class="col-md-6 col-lg-4" id="input-group-3" label="Food:" label-for="input-3">
-                                <b-form-select
-                                id="input-3"
-                                v-model="form.food"
-                                :options="foods"
-                                required
-                                ></b-form-select>
-                            </b-form-group>
-                        
-                            <b-form-group class="col-md-6 col-lg-4" id="input-group-4">
-                                <b-form-checkbox-group v-model="form.checked" id="checkboxes-4">
-                                <b-form-checkbox value="me">Check me out</b-form-checkbox>
-                                <b-form-checkbox value="that">Check that out</b-form-checkbox>
-                                </b-form-checkbox-group>
-                            </b-form-group>
+                            <div class="col-md-6 col-lg-4" v-for="(input, index) in form.inputs">
+                                <div class="row">
+                                    <b-form-group class="col-10" :label="input.label" label-for="input.name">
+                                        <b-form-input
+                                        required
+                                        :placeholder="input.placeHolder"
+                                        :name="input.name" :id="input.id"
+                                        ></b-form-input>
+                                    </b-form-group>
+                                    <div class="col-2" style="margin-top: auto; margin-bottom: auto;">
+                                        <b-button type="reset" size="sm" @click="deleteRow(index)" variant="danger">Excluir</b-button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 text-center" v-for="(button, index) in form.buttons">
+                                <b-button target="_blank" :style="{'background-color': button.cor, 'color': button.cor_texto}" v-if="button.tipo === 'link'" :name="button.name" :id="button.id" :href="button.link">{{ button.texto }}</b-button>
+                                <b-button v-else type="submit" :name="button.name" :id="button.id" :style="{'background-color': button.cor, 'color': button.cor_texto}">{{ button.texto }}</b-button>
+                            </div>
                         </div>
-                        
-                        <b-button type="submit" variant="primary">Submit</b-button>
-                        <b-button type="reset" variant="danger">Reset</b-button>
                     </b-form>
                     
                     <b-card class="mt-3" header="Form Data Result">
@@ -85,4 +112,6 @@
     <script src="https://unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.min.js"></script>
     <script src="https://unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue-icons.min.js"></script>
     <script src="app.js"></script>
+    <script src="Input.js"></script>
+    <script src="Button.js"></script>
 </html>
