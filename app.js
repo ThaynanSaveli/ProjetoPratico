@@ -6,11 +6,22 @@ new Vue({
           buttons: [],
       },
       exibirLink: 'submit',
+      bool_mask: 0,
+      exibirValoresForm: false,
+      imagem: ''
   },
   methods: {
     onSubmit(evt) {
       evt.preventDefault()
-      alert(JSON.stringify('Nome: '+this.form))
+      $('#div_dados_form').html('')
+      this.exibirValoresForm = true
+      $.each(this.form.inputs, function(index, input){
+        $('#div_dados_form').append(
+          '<div class="col-12 col-md-4">'
+              +input.label+ $('#'+input.id).val()+
+          '</div>'
+        );
+      });
     },
     onReset(evt) {
       evt.preventDefault()
@@ -24,14 +35,44 @@ new Vue({
       var placeholder = $('#str_texto_placeholder');
       var name = $('#str_nome_campo');
       var id = $('#str_id_campo');
-      var input = new Input(label.val(), placeholder.val(), name.val(), id.val());
-      
-      label.val('');
-      placeholder.val('');
-      name.val('');
-      id.val('');
+      var tem_mascara = this.bool_mask;
+      var input = new Input(label.val()+':', placeholder.val(), name.val(), id.val(), tem_mascara);
+      var pode_inserir = true;
 
-      this.form.inputs.push(input);
+      if(this.bool_mask == 1){
+        if(this.form.inputs.length){
+          $.each(this.form.inputs, function(index, input_inserido) {
+            if(input_inserido.tem_mascara == 0){
+              label.val('');
+              placeholder.val('');
+              name.val('');
+              id.val('');
+            }else{
+              pode_inserir = false;
+              alert('Ops! Numero máximo de campos com máscara atingido! Máximo: 1');
+              this.bool_mask = 0;
+            }
+          });
+          if(pode_inserir)
+            this.form.inputs.push(input);
+        }else{
+          label.val('');
+          placeholder.val('');
+          name.val('');
+          id.val('');
+    
+          this.form.inputs.push(input);
+          this.bool_mask = 0;
+        }
+      }else{
+        label.val('');
+        placeholder.val('');
+        name.val('');
+        id.val('');
+  
+        this.form.inputs.push(input);
+        this.bool_mask = 0;
+      }    
     },
     deleteRow(index) {
       this.form.inputs.splice(index, 1)
@@ -60,11 +101,14 @@ new Vue({
 
         this.form.buttons.push(button);
       }else{
-        alert('Limite de botões do formulário atingido! Máximo: 3 botões!')
+        alert('Ops! Limite de botões do formulário atingido! Máximo: 3 botões!')
       }
     },
     selected(){
       this.exibirLink = this.exibirLink == true ? false : true
+    },
+    aplicarImagem(evt){
+      this.imagem = $('#'+evt.srcElement.id)[0].src
     }
   }
 });
